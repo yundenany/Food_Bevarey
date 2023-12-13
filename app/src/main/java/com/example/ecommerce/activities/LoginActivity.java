@@ -26,7 +26,7 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        getSupportActionBar().hide();
+        //getSupportActionBar().hide();
 
         auth = FirebaseAuth.getInstance();
         email = findViewById(R.id.email);
@@ -36,9 +36,13 @@ public class LoginActivity extends AppCompatActivity {
 
     public void signup(View view){
 
+        startActivity(new Intent(LoginActivity.this, RegistrationActivity.class));
+
+    }
+
+    public void signin(View view){
         String userEmail = email.getText().toString();
         String userPassword = password.getText().toString();
-
         if(TextUtils.isEmpty(userEmail)){
 
             Toast.makeText(this, "Enter Email Address!", Toast.LENGTH_SHORT).show();
@@ -60,24 +64,18 @@ public class LoginActivity extends AppCompatActivity {
         }
 
         auth.signInWithEmailAndPassword(userEmail, userPassword)
-                        .addOnCompleteListener(LoginActivity.this, new OnCompleteListener<AuthResult>() {
-                            @Override
-                            public void onComplete(@NonNull Task<AuthResult> task) {
+                .addOnCompleteListener(LoginActivity.this, new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
 
-                                if(task.isSuccessful()){
-                                    Toast.makeText(LoginActivity.this, "Login Successful", Toast.LENGTH_SHORT).show();
-                                    startActivity(new Intent(LoginActivity.this, MainActivity.class));
-                                }else{
-                                    Toast.makeText(LoginActivity.this, "Error: " + task.getException(), Toast.LENGTH_SHORT).show();
-                                }
-                            }
-                        });
-
-    }
-
-    public void signin(View view){
-
-
+                        if(task.isSuccessful()){
+                            Toast.makeText(LoginActivity.this, "Login Successful", Toast.LENGTH_SHORT).show();
+                            startActivity(new Intent(LoginActivity.this, MainActivity.class));
+                        }else{
+                            Toast.makeText(LoginActivity.this, "Error: " + task.getException(), Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
     }
 
 }
