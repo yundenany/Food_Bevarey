@@ -75,7 +75,7 @@ public class DetailedActivity extends AppCompatActivity {
             popularProductsModel = (PopularProductsModel) obj;
         } else if (obj instanceof ShowAllModel) {
             showAllModel = (ShowAllModel) obj;
-    }
+        }
 
         detailedImg = findViewById(R.id.detailed_img);
         quantity = findViewById(R.id.quantity);
@@ -98,7 +98,7 @@ public class DetailedActivity extends AppCompatActivity {
             rating.setText(newProductsModel.getRating());
             description.setText(newProductsModel.getDescription());
             price.setText(String.valueOf(newProductsModel.getPrice()));
-            name.setText(newProductsModel.getName());
+            //name.setText(newProductsModel.getName());
 
             totalPrice = newProductsModel.getPrice() * totalQuantity;
         }
@@ -111,7 +111,7 @@ public class DetailedActivity extends AppCompatActivity {
             rating.setText(popularProductsModel.getRating());
             description.setText(popularProductsModel.getDescription());
             price.setText(String.valueOf(popularProductsModel.getPrice()));
-            name.setText(popularProductsModel.getName());
+            //name.setText(popularProductsModel.getName());
 
             totalPrice = popularProductsModel.getPrice() * totalQuantity;
         }
@@ -124,7 +124,7 @@ public class DetailedActivity extends AppCompatActivity {
             rating.setText(showAllModel.getRating());
             description.setText(showAllModel.getDescription());
             price.setText(String.valueOf(showAllModel.getPrice()));
-            name.setText(popularProductsModel.getName());
+            //name.setText(popularProductsModel.getName());
 
             totalPrice = showAllModel.getPrice() * totalQuantity;
         }
