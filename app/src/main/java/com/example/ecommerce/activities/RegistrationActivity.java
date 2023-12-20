@@ -12,17 +12,22 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.ecommerce.R;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.FirebaseFirestore;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class RegistrationActivity extends AppCompatActivity {
 
-    EditText name, email, password;
+    EditText name, email, phone, password;
     FirebaseAuth auth;
     SharedPreferences sharedPreferences;
-
+    FirebaseFirestore db = FirebaseFirestore.getInstance();
+    String role="user";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -39,6 +44,7 @@ public class RegistrationActivity extends AppCompatActivity {
         name = findViewById(R.id.name);
         email = findViewById(R.id.email);
         password = findViewById(R.id.password);
+        phone = findViewById(R.id.phonenumber);
 
         sharedPreferences = getSharedPreferences("onBoardingScreen", MODE_PRIVATE);
 
@@ -61,6 +67,7 @@ public class RegistrationActivity extends AppCompatActivity {
         String userName = name.getText().toString();
         String userEmail = email.getText().toString();
         String userPassword = password.getText().toString();
+        String userPhone = phone.getText().toString();
 
         if(TextUtils.isEmpty(userName)){
 
@@ -74,6 +81,12 @@ public class RegistrationActivity extends AppCompatActivity {
             return;
 
         }
+        if(TextUtils.isEmpty(userPhone)){
+
+            Toast.makeText(this, "Enter Phone Number!", Toast.LENGTH_SHORT).show();
+            return;
+
+        }
 
         if(TextUtils.isEmpty(userPassword)){
 
@@ -82,24 +95,69 @@ public class RegistrationActivity extends AppCompatActivity {
 
         }
 
+
         if(userPassword.length() < 8){
             Toast.makeText(this, "Password is too short. Enter minimum 8 characters!", Toast.LENGTH_SHORT).show();
             return;
 
         }
 
+//        auth.createUserWithEmailAndPassword(userEmail, userPassword)
+//                        .addOnCompleteListener(RegistrationActivity.this, new OnCompleteListener<AuthResult>() {
+//                            @Override
+//                            public void onComplete(@NonNull Task<AuthResult> task) {
+//                                 if(task.isSuccessful()){
+//
+//                                     //Phan Bai Da Lam
+//                                     Toast.makeText(RegistrationActivity.this, "Successfully Register ", Toast.LENGTH_SHORT).show();
+//                                     startActivity(new Intent(RegistrationActivity.this, MainActivity.class));
+//                                 }else{
+//                                     Toast.makeText(RegistrationActivity.this, "Registration Faile"+ task.getException(), Toast.LENGTH_SHORT).show();
+//                                 }
+//                            }
+//                        });
+
         auth.createUserWithEmailAndPassword(userEmail, userPassword)
-                        .addOnCompleteListener(RegistrationActivity.this, new OnCompleteListener<AuthResult>() {
-                            @Override
-                            public void onComplete(@NonNull Task<AuthResult> task) {
-                                 if(task.isSuccessful()){
-                                     Toast.makeText(RegistrationActivity.this, "Successfully Register ", Toast.LENGTH_SHORT).show();
-                                     startActivity(new Intent(RegistrationActivity.this, MainActivity.class));
-                                 }else{
-                                     Toast.makeText(RegistrationActivity.this, "Registration Fail"+ task.getException(), Toast.LENGTH_SHORT).show();
-                                 }
-                            }
-                        });
+                .addOnSuccessListener(new OnSuccessListener<AuthResult>() {
+                    @Override
+                    public void onSuccess(AuthResult authResult) {
+                        String uid = authResult.getUser().getUid();
+
+                        // Create a document for the user in Firestore
+                        Map<String, Object> userMap = new HashMap<>();
+                        userMap.put("email", userEmail);
+                        userMap.put("name", userName);
+                        userMap.put("phonenumber", userPhone);
+                        userMap.put("password", userPassword);
+                        // Add other user data here...
+
+                        db.collection("Users").document(uid).set(userMap)
+                                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                    @Override
+                                    public void onSuccess(Void aVoid) {
+                                        // User registered successfully and data saved
+                                        // Navigate to your app or show success message
+
+                                        Toast.makeText(RegistrationActivity.this, "Successfully Register ", Toast.LENGTH_SHORT).show();
+                                        startActivity(new Intent(RegistrationActivity.this, MainActivity.class));
+                                    }
+                                })
+                                .addOnFailureListener(new OnFailureListener() {
+                                    @Override
+                                    public void onFailure(@NonNull Exception e) {
+                                        // Handle error saving user data
+
+
+                                    }
+                                });
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        // Handle registration error
+                    }
+                });
 
     }
 

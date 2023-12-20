@@ -176,5 +176,15 @@
 
         </LinearLayout>
 
+        <ImageView
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_marginLeft="150dp"
+            android:id="@+id/deleteItem"
+            android:backgroundTint="@color/blue"
+            android:background="@drawable/baseline_delete_forever_24"/>
+
+
+
     </LinearLayout>
 </androidx.cardview.widget.CardView>

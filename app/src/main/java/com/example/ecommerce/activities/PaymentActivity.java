@@ -17,13 +17,16 @@ import com.razorpay.PaymentResultListener;
 
 import org.json.JSONObject;
 
-;
 
-public class PaymentActivity extends AppCompatActivity implements PaymentResultListener {
+public class PaymentActivity extends AppCompatActivity
+        implements PaymentResultListener
+{
     double amount = 0.0;
     Toolbar toolbar;
     TextView subTotal,discount,shipping,total;
     Button paymentBtn;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -60,7 +63,7 @@ public class PaymentActivity extends AppCompatActivity implements PaymentResultL
         paymentBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                paymentMethod();
+               paymentMethod();
             }
         });
 

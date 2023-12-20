@@ -74,6 +74,9 @@ public class CartActivity extends AppCompatActivity {
                         if(task.isSuccessful()){
                             for(DocumentSnapshot doc: task.getResult().getDocuments()){
                                 MyCartModel myCartModel = doc.toObject(MyCartModel.class);
+                                String documentId = doc.getId();
+                                myCartModel.setDocumentId(documentId);
+
                                 cartModelList.add(myCartModel);
                                 cartAdapter.notifyDataSetChanged();
                             }
